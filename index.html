@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>LULC Change Detection Dashboard</title>
 
 <!-- Leaflet CSS -->
@@ -25,24 +26,30 @@
 </script>
 
 <style>
-    body { font-family: 'Inter', sans-serif; overflow: hidden; background-color: #000; }
+    html, body { margin: 0; padding: 0; height: 100%; width: 100%; font-family: 'Inter', sans-serif; overflow: hidden; background-color: #000; }
     
     /* Map Container */
     #map {
         position: absolute; top: 0; bottom: 0; right: 0; left: 0; z-index: 10;
         transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .map-shifted { left: 400px !important; }
+    @media (min-width: 768px) {
+        .map-shifted { left: 400px !important; }
+    }
 
     /* Glassmorphic Sidebar */
     #sidebar {
-        position: absolute; top: 0; left: 0; width: 400px; height: 100%;
+        position: absolute; top: 0; left: 0; width: 100%; max-width: 400px; height: 100%;
         background: rgba(15, 15, 20, 0.90); backdrop-filter: blur(20px);
         border-right: 1px solid rgba(255, 255, 255, 0.1); color: white;
         z-index: 50; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         transform: translateX(0); display: flex; flex-direction: column;
-        overflow-y: auto; overflow-x: hidden;
         box-shadow: 20px 0 30px -10px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Mobile safe area for toggle button */
+    @media (max-width: 768px) {
+        #sidebar { max-width: calc(100vw - 48px); }
     }
 
     #sidebar.collapsed { transform: translateX(-100%); box-shadow: none; }
@@ -117,12 +124,15 @@
 <div id="map" class="map-shifted"></div>
 
 <!-- Sidebar -->
-<div id="sidebar" class="p-6 pb-8">
+<div id="sidebar">
     <button id="toggleBtn" aria-label="Toggle Sidebar">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
     </button>
+    
+    <!-- Scrollable Content Area -->
+    <div class="h-full w-full overflow-y-auto overflow-x-hidden p-6 pb-8 flex flex-col">
 
     <div class="mb-4 flex justify-between items-center border-b border-gray-700/50 pb-4">
         <div class="flex items-center space-x-3">
@@ -169,6 +179,8 @@
             <canvas id="chart"></canvas>
         </div>
     </div>
+    
+    </div> <!-- End Scrollable Wrapper -->
 </div>
 
 <!-- ============================================== -->
